@@ -20,16 +20,14 @@ class TestCrawler(unittest.TestCase):
         for url in urls:
             workers[url] = crawler.crawl(url=url)
 
-        results = [(k, str(w())) for k, w in workers.items()]
-
-        print str(results)
+        [(k, str(w())) for k, w in workers.items()]
 
     def testCrawlerFail(self):
         from feederengine import crawler
 
         try:
             str(crawler.crawl(url="http://1.1.1.1")(.01))
-            self.fail() #pragma no cover
+            self.fail()  # pragma no cover
         except:
             pass
 
@@ -44,7 +42,7 @@ class TestCrawler(unittest.TestCase):
         crawler.proxy = err_app
         try:
             str(crawler.crawl(url="http://1.1.1.1")(.01))
-            self.fail() #pragma no cover
+            self.fail()  # pragma no cover
         except:
             pass
 
@@ -53,11 +51,10 @@ class TestCrawler(unittest.TestCase):
         strictly for test coverage
         """
         from feederengine import crawler
-        t = crawler._CrawlerThread(url="")
+        t = crawler._CrawlerThread(url="bobo")
         t._response = 1
         try:
             t.response
             self.fail()
         except:
             pass
-

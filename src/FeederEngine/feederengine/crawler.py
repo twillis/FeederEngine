@@ -40,8 +40,7 @@ class _CrawlerThread(threading.Thread):
             self._response = request.get_response(proxy)
         except Exception:
             self.log.error("error getting response", exc_info=True)
-            return # raise???
-
+            raise
 
     @property
     def response(self):
@@ -52,7 +51,7 @@ class _CrawlerThread(threading.Thread):
                     response = self._response.copy()  # necessary??
             except Exception as ex:
                 self.log.error("error copying response", exc_info=True)
-                return None # raise??
+                raise
             return response
         else:
             return None
