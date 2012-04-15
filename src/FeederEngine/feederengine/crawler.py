@@ -25,26 +25,34 @@ class _CrawlerThread(threading.Thread):
         self._url = url
         self._etag = etag
         self._last_modified = last_modified
+        self.log = log = logging.getLogger("%s(%s)" % (self.__class__.__name__, self._url))
         super(_CrawlerThread, self).__init__()
         self.daemon = True
 
     def run(self):
         # filter out params equal to None
+
         extra_args = {k: v for k, v in dict(etag=self._etag,
                                             if_modified_since=self._last_modified).items() if v}
         request = Request.blank(self._url, **extra_args)
 
+        try:
+            self._response = request.get_response(proxy)
+        except Exception:
+            self.log.error("error getting response", exc_info=True)
+            return # raise???
 
-        self._response = request.get_response(proxy)
-        log.debug("response recieved from %s (%s)" \
-                  % (self._url, self._response.status_int))
 
     @property
     def response(self):
         if self._response:
             response = None
-            with threading.Lock() as lock:  # not sure whether this is needed but it's neat
-                response = self._response.copy()  # necessary??
+            try:
+                with threading.Lock() as lock:  # not sure whether this is needed but it's neat
+                    response = self._response.copy()  # necessary??
+            except Exception as ex:
+                self.log.error("error copying response", exc_info=True)
+                return None # raise??
             return response
         else:
             return None
