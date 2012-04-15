@@ -7,6 +7,11 @@ from webob import Request, Response
 import os
 from mimetypes import guess_type
 import md5
+from feederengine.crawler import crawl
+import logging
+
+logging.basicConfig(level="DEBUG")
+
 here = here = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(here, "data")
 RSS_PATH = os.path.join(data_dir, "rss.xml")
@@ -47,24 +52,21 @@ def mock_rss_server(environ, start_response):
 
 
 class TestCrawler(unittest.TestCase):
-    def testCrawlURL(self):
-        URL = "/"
-        res = Request.blank(URL).get_response(mock_rss_server)
-        #should get a success
-        self.assert_(res.status_int == 200)
+    def testCrawlWorker(self):
+        urls = ["http://www.reddit.com/r/Python/",
+                "http://slashdot.org",
+                "http://news.ycombinator.com/"]
+        workers = {}
+        for url in urls:
+            workers[url] = crawl(url=url)
 
-        #should be getting xml
-        XML_START = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-        self.assert_(res.body.startswith(XML_START), res.body)
+        results = [(k, str(w())) for k, w in workers.items()]
 
-        print str(res)
+        print str(results)
 
-        #should be getting an etag (need modified since etc... as well)
-        etag = res.etag
-        self.assert_(etag, res.headers)
-
-        # should get a 304 because of etag match
-        req = Request.blank("/", if_none_match=etag)
-        res = req.get_response(mock_rss_server)
-        self.assert_(res.status_int == 304, res.status_int)
-        print str(res)
+    def testCrawlerFail(self):
+        try:
+            str(crawl(url="http://1.1.1.1")(.01))
+            self.fail()
+        except:
+            pass
