@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xml:base="http://blog.sadphaeton.com"  xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel>
+ <title>Sad Phaeton Blogs</title>
+ <link>http://blog.sadphaeton.com</link>
+ <description></description>
+ <language>en</language>
+<item>
+ <title>Just Sayin...</title>
+ <link>http://blog.sadphaeton.com/tom/2010/09/16/just-sayin.html</link>
+ <description>&lt;p class=&quot;rteleft&quot;&gt;So if you have a job in software, you&#039;ve probably dealt with this scenario before. Your company goes through a round of layoffs to better match expenses with revenue. A valid and sometimes necessary business decision. BUT, if you rewind the clock back to when all the decision makers were making their optimistic predictions about how much money the company was going to make, &amp;nbsp;they were guessing, perhaps using some data points, some analysis and research but when it gets down to it they were guessing.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;http://blog.sadphaeton.com/tom/2010/09/16/just-sayin.html&quot; target=&quot;_blank&quot;&gt;read more&lt;/a&gt;&lt;/p&gt;</description>
+ <comments>http://blog.sadphaeton.com/tom/2010/09/16/just-sayin.html#comments</comments>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/bullshit">bullshit</category>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/greed">greed</category>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/software">software</category>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/work">work</category>
+ <pubDate>Thu, 16 Sep 2010 18:56:04 +0000</pubDate>
+ <dc:creator>Tom</dc:creator>
+ <guid isPermaLink="false">44 at http://blog.sadphaeton.com</guid>
+</item>
+<item>
+ <title>Implementing a proxy server with webob and paste</title>
+ <link>http://blog.sadphaeton.com/tom/2010/03/23/implementing-proxy-server-webob-and-paste.html</link>
+ <description>&lt;p class=&quot;rteleft&quot;&gt;I thought this was kind of neat. An http &lt;a href=&quot;http://en.wikipedia.org/wiki/Proxy_server&quot; target=&quot;_blank&quot;&gt;proxy&lt;/a&gt;&amp;nbsp;is a useful tool to have, there are many types for many different purposes. It&#039;s a program that you can put between a client and a web server. See the wiki article for all the common uses for a proxy. Anyway, after playing with these for a couple of days I had some needs at work that it seemed would work if I had a proxy server I could drop some custom code in for various things.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;http://blog.sadphaeton.com/tom/2010/03/23/implementing-proxy-server-webob-and-paste.html&quot; target=&quot;_blank&quot;&gt;read more&lt;/a&gt;&lt;/p&gt;</description>
+ <comments>http://blog.sadphaeton.com/tom/2010/03/23/implementing-proxy-server-webob-and-paste.html#comments</comments>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/python">python</category>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/webob">webob</category>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/wsgi">wsgi</category>
+ <pubDate>Tue, 23 Mar 2010 16:33:13 +0000</pubDate>
+ <dc:creator>Tom</dc:creator>
+ <guid isPermaLink="false">43 at http://blog.sadphaeton.com</guid>
+</item>
+<item>
+ <title>....</title>
+ <link>http://blog.sadphaeton.com/tom/2010/01/28/.html</link>
+ <description>&lt;p class=&quot;rteleft&quot;&gt;&lt;img width=&quot;553&quot; height=&quot;123&quot; src=&quot;http://blog.sadphaeton.com/sites/default/files/users/user3/blog_pic.jpg&quot; alt=&quot;working on it&quot; /&gt;&lt;/p&gt;</description>
+ <comments>http://blog.sadphaeton.com/tom/2010/01/28/.html#comments</comments>
+ <pubDate>Fri, 29 Jan 2010 00:32:50 +0000</pubDate>
+ <dc:creator>Tom</dc:creator>
+ <guid isPermaLink="false">42 at http://blog.sadphaeton.com</guid>
+</item>
+<item>
+ <title>Loud Thinking: about MVC</title>
+ <link>http://blog.sadphaeton.com/tom/2009/12/25/loud-thinking-about-mvc.html</link>
+ <description>&lt;p&gt;I finally got around to planning the next article in my &amp;quot;Introduction
+to &lt;a class=&quot;reference external&quot; href=&quot;http://bfg.repoze.org&quot;&gt;bfg&lt;/a&gt;&amp;quot; series which will hope be done in a week or so. At one point when
+writing it I was trying to describe why I used the context models in
+such an &amp;quot;unconventional way&amp;quot;. I concluded that at least for me, it is
+because patterns like Model View Controller, and Model View Template
+as implemented by some web frameworks today only provide a partial
+solution to managing application complexity.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;http://blog.sadphaeton.com/tom/2009/12/25/loud-thinking-about-mvc.html&quot; target=&quot;_blank&quot;&gt;read more&lt;/a&gt;&lt;/p&gt;</description>
+ <comments>http://blog.sadphaeton.com/tom/2009/12/25/loud-thinking-about-mvc.html#comments</comments>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/aspnet">asp.net</category>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/mvc">MVC</category>
+ <pubDate>Sat, 26 Dec 2009 00:07:21 +0000</pubDate>
+ <dc:creator>Tom</dc:creator>
+ <guid isPermaLink="false">41 at http://blog.sadphaeton.com</guid>
+</item>
+<item>
+ <title>identity.model 0.5 released</title>
+ <link>http://blog.sadphaeton.com/tom/2009/12/25/identitymodel-05-released.html</link>
+ <description>&lt;p class=&quot;rteleft&quot;&gt;So I&#039;ve been making the most of my vacation time and more recently, sick time. I&#039;ve decided to cut a release of identity.model and make it official. So here it is.&amp;nbsp;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;http://blog.sadphaeton.com/tom/2009/12/25/identitymodel-05-released.html&quot; target=&quot;_blank&quot;&gt;read more&lt;/a&gt;&lt;/p&gt;</description>
+ <comments>http://blog.sadphaeton.com/tom/2009/12/25/identitymodel-05-released.html#comments</comments>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/bfg">bfg</category>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/identitymodel">identity.model</category>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/python">python</category>
+ <pubDate>Fri, 25 Dec 2009 16:11:12 +0000</pubDate>
+ <dc:creator>Tom</dc:creator>
+ <guid isPermaLink="false">40 at http://blog.sadphaeton.com</guid>
+</item>
+<item>
+ <title>An Introduction to BFG part 2 of ...</title>
+ <link>http://blog.sadphaeton.com/tom/2009/11/08/introduction-bfg-part-2.html</link>
+ <description>&lt;p&gt;In &lt;a class=&quot;reference external&quot; href=&quot;/node/37&quot;&gt;part 1&lt;/a&gt;, we really didn&#039;t get into any code, just a high level
+overview of what &lt;a class=&quot;reference external&quot; href=&quot;http://bfg.repoze.org&quot;&gt;bfg&lt;/a&gt; is, and why I&#039;ve taken an interest in it. From
+here on out, it will get pretty technical. For this article I thought
+it would be nice to get something significant working that
+demonstrates how model traversal can be used.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;http://blog.sadphaeton.com/tom/2009/11/08/introduction-bfg-part-2.html&quot; target=&quot;_blank&quot;&gt;read more&lt;/a&gt;&lt;/p&gt;</description>
+ <comments>http://blog.sadphaeton.com/tom/2009/11/08/introduction-bfg-part-2.html#comments</comments>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/bfg">bfg</category>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/python">python</category>
+ <pubDate>Sun, 08 Nov 2009 21:49:27 +0000</pubDate>
+ <dc:creator>Tom</dc:creator>
+ <guid isPermaLink="false">38 at http://blog.sadphaeton.com</guid>
+</item>
+<item>
+ <title>An Introduction to BFG part 1 of ...</title>
+ <link>http://blog.sadphaeton.com/tom/2009/11/02/introduction-bfg-part-1.html</link>
+ <description>&lt;p class=&quot;rteleft&quot;&gt;I just finished up a simple application that was just significant enough to get me familiar with all the features of &lt;a class=&quot;reference external&quot; href=&quot;http://bfg.repoze.org&quot;&gt;bfg&lt;/a&gt; that i was curious about. So I thought it would be great to dump my brain for others who are curious.&lt;/p&gt;
+&lt;p class=&quot;rteleft&quot;&gt;This will likely be a series of posts that I&amp;rsquo;ll get up here over time so be sure to check back for updates....&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;http://blog.sadphaeton.com/tom/2009/11/02/introduction-bfg-part-1.html&quot; target=&quot;_blank&quot;&gt;read more&lt;/a&gt;&lt;/p&gt;</description>
+ <comments>http://blog.sadphaeton.com/tom/2009/11/02/introduction-bfg-part-1.html#comments</comments>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/bfg">bfg</category>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/python">python</category>
+ <pubDate>Mon, 02 Nov 2009 10:34:16 +0000</pubDate>
+ <dc:creator>Tom</dc:creator>
+ <guid isPermaLink="false">37 at http://blog.sadphaeton.com</guid>
+</item>
+<item>
+ <title>I&#039;m a bad blog admin...</title>
+ <link>http://blog.sadphaeton.com/tom/2009/10/07/im-bad-blog-admin.html</link>
+ <description>&lt;p class=&quot;rteleft&quot;&gt;Like every person who&#039;s compelled to blog, I check back to see what people are finding interesting, and if anyone leaves any comments. As of late, I noticed comments on my entry on how to install easy_install on Windows was getting lots of traffic from stackoverflow.com, and google. Heck yesterday I was surprised to see that google was ranking that page higher than the authors of easy_install in some instances. &lt;/p&gt;&lt;p&gt;&lt;a href=&quot;http://blog.sadphaeton.com/tom/2009/10/07/im-bad-blog-admin.html&quot; target=&quot;_blank&quot;&gt;read more&lt;/a&gt;&lt;/p&gt;</description>
+ <comments>http://blog.sadphaeton.com/tom/2009/10/07/im-bad-blog-admin.html#comments</comments>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/drupal">drupal</category>
+ <pubDate>Wed, 07 Oct 2009 13:02:25 +0000</pubDate>
+ <dc:creator>Tom</dc:creator>
+ <guid isPermaLink="false">36 at http://blog.sadphaeton.com</guid>
+</item>
+<item>
+ <title>I have Eggs!!!!</title>
+ <link>http://blog.sadphaeton.com/tom/2009/10/05/i-have-eggs.html</link>
+ <description>&lt;p&gt;Thanks to the good people over at &lt;a href=&quot;http://stackoverflow.com/questions/1519589/how-do-you-host-your-own-egg-repository&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;stackoverflow&lt;/a&gt; I now have the power to deploy eggs(Python eggs that is). If you&#039;re not coding python, you probably don&#039;t give a shit anyway. But it&#039;s something which has been eluding me for quite sometime, and I&#039;m now at the point where I needed something just like this. It&#039;s embarassing how simple it is.&lt;/p&gt;
+&lt;p&gt;Anyway, not much there yet. Mainly it&#039;s a proof of concept, but eventually I hope to make it a nice convenient place for my codez.&lt;/p&gt;
+&lt;p&gt;&lt;a target=&quot;_blank&quot; href=&quot;http://eggs.sadphaeton.com/&quot; rel=&quot;nofollow&quot;&gt;Sad Phaeton Eggs&lt;/a&gt; and for some god awful reason you would like to consult it in your development, just drop a .pydistutils.cfg in your home directory(probably c:\Documents and Settings\user if you&#039;re on windows). And in that file drop something like the following in it....&lt;/p&gt;
+&lt;div class=&quot;geshifilter&quot;&gt;&lt;pre class=&quot;text geshifilter-text&quot; style=&quot;font-family:monospace;&quot;&gt;[easy_install]
+find_links = http://eggs.sadphaeton.com&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And done...&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;http://blog.sadphaeton.com/tom/2009/10/05/i-have-eggs.html&quot; target=&quot;_blank&quot;&gt;read more&lt;/a&gt;&lt;/p&gt;</description>
+ <comments>http://blog.sadphaeton.com/tom/2009/10/05/i-have-eggs.html#comments</comments>
+ <category domain="http://blog.sadphaeton.com/tags/blog-tags/python">python</category>
+ <pubDate>Tue, 06 Oct 2009 02:49:41 +0000</pubDate>
+ <dc:creator>Tom</dc:creator>
+ <guid isPermaLink="false">35 at http://blog.sadphaeton.com</guid>
+</item>
+<item>
+ <title>Fun with Outlook calendar</title>
+ <link>http://blog.sadphaeton.com/tom/2009/09/29/fun-outlook-calendar.html</link>
+ <description>&lt;p&gt;So, #1 I very much dislike how companies depend on outlook as the central hub of communication. But alas, I have to work with it daily, so lately I have become accustomed to scheduling a lot of meetings(another annoyance). And in doing this, I&#039;ve found it to be a fun activity to write really long management speak phrases in the subject line.&lt;/p&gt;
+&lt;p&gt;I suspect this also has an advantage of lowering the chances that your meeting will be bumped because it&#039;s verbose and sounds serious, and perhaps some pointy haired types will think twice if at all before double booking you.&lt;/p&gt;
+&lt;p&gt;Today&#039;s meeting which starts @ 11:30.&lt;/p&gt;
+&lt;blockquote&gt;&amp;quot;Strategic planning on addressing technical debt in the context of current business conditional priorities in increasing velocity through synergistic best practices&amp;quot; &lt;/blockquote&gt;
+&lt;p&gt;&amp;nbsp;This is actually a standing lunch for some of our team members at bw3s (.49 wing day). &lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://blog.sadphaeton.com/tom/2009/09/29/fun-outlook-calendar.html&quot; target=&quot;_blank&quot;&gt;read more&lt;/a&gt;&lt;/p&gt;</description>
+ <comments>http://blog.sadphaeton.com/tom/2009/09/29/fun-outlook-calendar.html#comments</comments>
+ <pubDate>Tue, 29 Sep 2009 15:24:59 +0000</pubDate>
+ <dc:creator>Tom</dc:creator>
+ <guid isPermaLink="false">34 at http://blog.sadphaeton.com</guid>
+</item>
+</channel>
+</rss>

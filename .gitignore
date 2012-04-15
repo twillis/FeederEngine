@@ -6,3 +6,6 @@ etc
 parts
 var
 env
+develop-eggs
+*.egg-info
+*.pyc
