@@ -6,7 +6,14 @@ here = os.path.dirname(os.path.abspath(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
-requires = ["feedparser", "webob", "paste", "pyzmq-static"]
+requires = ["feedparser",
+            "webob",
+            "paste",
+            "pyzmq-static",
+            "sqlalchemy",
+            "zope.sqlalchemy",
+            "transaction"]
+
 version = '0.0'
 
 setup(name='FeederEngine',

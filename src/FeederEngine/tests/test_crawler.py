@@ -4,6 +4,7 @@ about fetching by doing a head request first, or responding to a 302
 """
 import unittest
 import logging
+from utils import mock_rss_server
 
 logging.basicConfig(level="DEBUG")
 
@@ -12,7 +13,7 @@ class TestCrawler(unittest.TestCase):
     def testCrawlWorker(self):
 
         from feederengine import crawler
-
+        crawler.proxy = mock_rss_server  # so that reddit being down doesn't break the test
         urls = ["http://www.reddit.com/r/Python/",
                 "http://slashdot.org",
                 "http://news.ycombinator.com/"]
