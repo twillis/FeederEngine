@@ -71,7 +71,14 @@ def mark_job_checked(url, etag=None, last_modified=None):
         rec.last_modified = last_modified
         return rec
     else:
-        return None
+        # or to do imports, just accept the data, and set
+        # last_scheduled = last_checked
+        now = datetime.datetime.now()
+        return CrawlJobModel(url,
+                             last_scheduled=now,
+                             last_checked=now,
+                             etag=etag,
+                             last_modified=last_modified)
 
 
 def get_crawl_jobs(count=DEFAULT_JOB_COUNT, threshold_minutes=5):
@@ -84,6 +91,6 @@ def get_crawl_jobs(count=DEFAULT_JOB_COUNT, threshold_minutes=5):
     """
     # select * from
     q = DBSession.query(CrawlJobModel)
-    q = q.filter(CrawlJobModel.state_not_just_checked(threshold_minutes)).order_by(CrawlJobModel.last_checked)
-
-    return q
+    return q.filter(CrawlJobModel.state_not_just_checked(threshold_minutes))\
+        .filter(CrawlJobModel.state_not_in_process)\
+        .order_by(CrawlJobModel.last_checked)

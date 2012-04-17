@@ -7,23 +7,22 @@ from sqlalchemy import create_engine
 import transaction
 import datetime
 import uuid
-import time
 
-def make_engine():
-    engine = create_engine('sqlite:///:memory:', echo=True)
-    return engine
+
+
+engine = create_engine('sqlite:///:memory:', echo=True)
 
 
 def setUp(self):
     """need db setup"""
-    self.engine = make_engine()
-    scheduler.DBSession.configure(bind=self.engine)
-    scheduler.Base.metadata.create_all(self.engine)
+
+    scheduler.DBSession.configure(bind=engine)
+    scheduler.Base.metadata.create_all(engine)
 
 
 def tearDown(self):
     """need db teardown"""
-    scheduler.Base.metadata.drop_all(self.engine)
+    scheduler.Base.metadata.drop_all(engine)
 
 
 class TestCrawlJobModel(unittest.TestCase):
@@ -33,9 +32,9 @@ class TestCrawlJobModel(unittest.TestCase):
     def tearDown(self):
         tearDown(self)
 
-    def testGetCrawlJobs(self):
+    def testCrawlJobsScheduledChecked(self):
         """
-        does it run without error?
+        tests out the mark_job_scheduled and mark_job_checked logic
         """
         urls = [u"http://feeds.feedburner.com/43folders",
                 u"http://advocacy.python.org/podcasts/littlebit.rss",
@@ -60,7 +59,56 @@ class TestCrawlJobModel(unittest.TestCase):
             self.assert_(rec, "no rec for url %s" % url)
             self.assert_(etag == rec.etag)
             self.assert_(last_modified == rec.last_modified)
-        time.sleep(2)
-        recs = [r for r in scheduler.get_crawl_jobs(threshold_minutes=5)]
-        data = [dict(url=r.url, last_scheduled=r.last_scheduled, last_checked=r.last_checked) for r in recs]
-        self.assert_(len(recs) == len(urls) - 1, (len(recs), len(urls), data))
+
+
+class TestScheduler(unittest.TestCase):
+    def make_data(self):
+        urls = [u"http://feeds.feedburner.com/43folders",
+                u"http://advocacy.python.org/podcasts/littlebit.rss",
+                u"http://friendfeed.com/alawrence?format=atom",
+                u"http://feeds.feedburner.com/antiwar"]
+        recs = []
+
+        with transaction.manager:
+            for url in urls:
+                recs.append(scheduler.mark_job_scheduled(url))
+
+        return recs
+
+    def scheduled_backdate_recs(self, recs, ago_minutes=5):
+        ago_date = datetime.datetime.now() - datetime.timedelta(minutes=ago_minutes)
+        with transaction.manager:
+            for rec in recs:
+                rec.last_scheduled = ago_date
+                scheduler.DBSession.add(rec)
+
+    def checked_backdate_recs(self, recs, ago_minutes=5):
+        ago_date = datetime.datetime.now() - datetime.timedelta(minutes=ago_minutes)
+        with transaction.manager:
+            for rec in recs:
+                rec.last_checked = ago_date
+                scheduler.DBSession.add(rec)
+
+
+    def setUp(self):
+        setUp(self)
+
+    def tearDown(self):
+        tearDown(self)
+
+    def testGetCrawlJobs(self):
+        recs = self.make_data()
+
+        #stuff is scheduled, backdate scheduled
+        self.scheduled_backdate_recs(recs, 10)
+
+
+        # at this point we should get 0 results because no job has been marked checked
+        result = [r for r in scheduler.get_crawl_jobs()]
+        self.assert_(len(result) == 0)
+
+        # if we mark one checked and backdate it to 7 minutes ago we should get results of 1
+        self.checked_backdate_recs([recs[0], ], 7)
+        result = [r for r in scheduler.get_crawl_jobs()]
+        self.assert_(len(result) == 1)
+
