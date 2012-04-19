@@ -139,7 +139,8 @@ class TestScheduler(unittest.TestCase):
         self.checked_backdate_recs(recs, 50)
 
         with transaction.manager:
-            url = recs[0].url
+            rec = scheduler.DBSession.merge(recs[0])
+            url = rec.url
             newrec = scheduler.mark_job_scheduled(url)
             scheduler.DBSession.add(newrec)
 

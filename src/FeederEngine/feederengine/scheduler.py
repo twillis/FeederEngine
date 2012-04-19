@@ -13,8 +13,7 @@ DEFAULT_JOB_COUNT = 10
 Base = declarative_base()
 
 # engine gets set elsewhere
-DBSession = scoped_session(sessionmaker(expire_on_commit=False, # makes unit tests pass
-                                        extension=ZopeTransactionExtension()))
+DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 
 
 class CrawlJobModel(Base):
