@@ -13,6 +13,24 @@ log = logging.getLogger(__name__)
 # forwards request to specified url
 proxy = TransparentProxy()
 
+# put this logic here, that way, we can move it to process based
+# pretty easily or even app engine
+def crawl_url(url, etag=None, last_modified=None):
+    """
+    fetch response from url and return it, do the nice thing by
+    passing etag and last_modified to make the server work less
+    """
+    # filter out params equal to None
+    extra_args = {k: v for k, v in dict(etag=etag,
+                                        if_modified_since=last_modified).items() if v}
+    request = Request.blank(url, **extra_args)
+
+    try:
+        return request.get_response(proxy)
+    except Exception:
+        log.error("error getting response", exc_info=True)
+        raise
+
 
 class _CrawlerThread(threading.Thread):
     """
@@ -30,17 +48,10 @@ class _CrawlerThread(threading.Thread):
         self.daemon = True
 
     def run(self):
-        # filter out params equal to None
+        self._response = crawl_url(url=self._url,
+                                   etag=self._etag,
+                                   last_modified=self._last_modified)
 
-        extra_args = {k: v for k, v in dict(etag=self._etag,
-                                            if_modified_since=self._last_modified).items() if v}
-        request = Request.blank(self._url, **extra_args)
-
-        try:
-            self._response = request.get_response(proxy)
-        except Exception:
-            self.log.error("error getting response", exc_info=True)
-            raise
 
     @property
     def response(self):
@@ -77,7 +88,6 @@ def crawl(url, etag=None, last_modified=None):
         the response
         """
         t.join(timeout)
-
         if not t.response:
             raise Exception("ERROR: didn't get a response from %s" % url)  # need
                                                                     # a

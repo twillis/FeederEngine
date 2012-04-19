@@ -13,7 +13,8 @@ DEFAULT_JOB_COUNT = 10
 Base = declarative_base()
 
 # engine gets set elsewhere
-DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+DBSession = scoped_session(sessionmaker(expire_on_commit=False, # makes unit tests pass
+                                        extension=ZopeTransactionExtension()))
 
 
 class CrawlJobModel(Base):
@@ -74,7 +75,7 @@ def mark_job_checked(url, etag=None, last_modified=None):
         # or to do imports, just accept the data, and set
         # last_scheduled = last_checked
         now = datetime.datetime.now()
-        return CrawlJobModel(url,
+        return CrawlJobModel(url=url,
                              last_scheduled=now,
                              last_checked=now,
                              etag=etag,
