@@ -4,16 +4,15 @@ a crawler to crawl for updates
 """
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, UnicodeText, String, DateTime, or_, and_
-from sqlalchemy.orm import scoped_session, sessionmaker
-from zope.sqlalchemy import ZopeTransactionExtension
+from sqlalchemy.orm import scoped_session
+import meta
 import datetime
 
 DEFAULT_JOB_COUNT = 10
 
 Base = declarative_base()
 
-# engine gets set elsewhere
-DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+
 
 
 class CrawlJobModel(Base):
@@ -41,17 +40,17 @@ class CrawlJobModel(Base):
     @classmethod
     def state_not_just_checked(cls, ago=5):
         threshold = datetime.datetime.now() - datetime.timedelta(minutes=ago)
-        return or_(cls.state_never_checked,
-                   and_(cls.state_checked,
-                        cls.last_checked < threshold))
+        return cls.last_checked < threshold
 
 
 def get_for_url(url):
+    DBSession = meta.Session()
     return DBSession.query(CrawlJobModel)\
            .filter(CrawlJobModel.url == url).first()
 
 
 def mark_job_scheduled(url):
+    DBSession = meta.Session()
     rec = get_for_url(url)
     if rec:
         rec.last_scheduled = datetime.datetime.now()
@@ -90,7 +89,9 @@ def get_crawl_jobs(count=DEFAULT_JOB_COUNT, threshold_minutes=5):
     the job
     """
     # select * from
+    DBSession = meta.Session()
     q = DBSession.query(CrawlJobModel)
-    return q.filter(CrawlJobModel.state_not_just_checked(threshold_minutes))\
-        .filter(CrawlJobModel.state_not_in_process)\
+    return q.filter(or_(CrawlJobModel.state_not_just_checked(threshold_minutes),
+                        CrawlJobModel.state_never_scheduled,
+                        CrawlJobModel.state_not_in_process))\
         .order_by(CrawlJobModel.last_checked)

@@ -2,25 +2,28 @@
 scheduler tests
 """
 import unittest
-from feederengine import scheduler
+from feederengine import scheduler, meta
 from sqlalchemy import create_engine
 import transaction
 import datetime
 import uuid
 
-engine = create_engine('sqlite:///:memory:', echo=True)
+
+meta.db_url = 'sqlite:///:memory:'
+
 
 
 def setUp(self):
     """db setup"""
-
-    scheduler.DBSession.configure(bind=engine)
-    scheduler.Base.metadata.create_all(engine)
+    self.engine = create_engine(meta.db_url, echo=False)
+    meta.Session = meta.session_factory(self.engine)
+    # scheduler.DBSession.configure(bind=self.engine)
+    scheduler.Base.metadata.create_all(self.engine)
 
 
 def tearDown(self):
     """db teardown"""
-    scheduler.Base.metadata.drop_all(engine)
+    scheduler.Base.metadata.drop_all(self.engine)
 
 
 class TestCrawlJobModel(unittest.TestCase):
@@ -46,7 +49,7 @@ class TestCrawlJobModel(unittest.TestCase):
                 self.assert_(rec, "no rec for url %s" % url)
 
         recs = [r for r in \
-                scheduler.DBSession.query(scheduler.CrawlJobModel).all()]
+                meta.Session().query(scheduler.CrawlJobModel).all()]
         self.assert_(len(recs) == len(urls), (len(recs), len(urls)))
 
         # pretend we crawled the url and update the record
@@ -84,7 +87,7 @@ class TestScheduler(unittest.TestCase):
         with transaction.manager:
             for rec in recs:
                 rec.last_scheduled = ago_date
-                scheduler.DBSession.add(rec)
+                meta.Session().add(rec)
 
     def checked_backdate_recs(self, recs, ago_minutes=5):
         """helpers so we don't have to wait 5 minutes"""
@@ -92,7 +95,7 @@ class TestScheduler(unittest.TestCase):
         with transaction.manager:
             for rec in recs:
                 rec.last_checked = ago_date
-                scheduler.DBSession.add(rec)
+                meta.Session().add(rec)
 
     def setUp(self):
         setUp(self)
@@ -139,10 +142,10 @@ class TestScheduler(unittest.TestCase):
         self.checked_backdate_recs(recs, 50)
 
         with transaction.manager:
-            rec = scheduler.DBSession.merge(recs[0])
+            rec = meta.Session().merge(recs[0])
             url = rec.url
             newrec = scheduler.mark_job_scheduled(url)
-            scheduler.DBSession.add(newrec)
+            meta.Session().add(newrec)
 
     def testAssumeChecked(self):
         """
@@ -152,5 +155,5 @@ class TestScheduler(unittest.TestCase):
         """
         with transaction.manager:
             newrec = scheduler.mark_job_checked("http://gooogle.com")
-            scheduler.DBSession.add(newrec)
+            meta.Session().add(newrec)
             self.assert_(newrec)

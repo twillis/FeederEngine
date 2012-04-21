@@ -10,3 +10,5 @@ develop-eggs
 *.egg-info
 *.pyc
 .coverage
+*.db
+*.db-journal
