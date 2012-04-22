@@ -25,11 +25,9 @@ class TestKillableProcess(unittest.TestCase):
 
         w = KillableProcess()
         w.start()
-        time.sleep(1)
         self.assert_(w.is_alive())
-        time.sleep(1)
         w.terminate()
-        time.sleep(1)
+        time.sleep(.01)
         self.assert_(not w.is_alive())
 
 
