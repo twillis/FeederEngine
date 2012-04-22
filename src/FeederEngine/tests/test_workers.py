@@ -38,7 +38,8 @@ class TestKillableProcess(unittest.TestCase):
 
 class TestSchedulerWorker(unittest.TestCase):
     def setUp(self):
-        db_url = "sqlite:///%s/%s.db" % (TMP_DBPATH, str(uuid.uuid4()))
+        self.db_path = "%s.db" % os.path.join(TMP_DBPATH, str(uuid.uuid4()))
+        db_url = "sqlite:///%s" % self.db_path
         self.engine = create_engine(db_url,
                                     echo=False)
         meta.Session = meta.session_factory(self.engine)
@@ -47,7 +48,9 @@ class TestSchedulerWorker(unittest.TestCase):
 
     def tearDown(self):
         scheduler.Base.metadata.drop_all(self.engine)
-
+        if os.path.isfile(self.db_path):
+            os.remove(self.db_path)
+        
     def testSchedulerAndCrawler(self):
         urls = [u"http://feeds.feedburner.com/43folders",
                 u"http://advocacy.python.org/podcasts/littlebit.rss",
