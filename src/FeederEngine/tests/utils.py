@@ -5,10 +5,19 @@ from mimetypes import guess_type
 import md5
 from webob import Request, Response
 import os
+import contextlib
 
 here = here = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(here, "data")
 RSS_PATH = os.path.join(data_dir, "rss.xml")
+
+
+@contextlib.contextmanager
+def mock(module, attribute_name, value):
+    orig = getattr(module, attribute_name)
+    setattr(module, attribute_name, value)
+    yield
+    setattr(module, attribute_name, orig)
 
 
 def mime_type(filename):

@@ -45,32 +45,37 @@ class SchedulerWorker(KillableProcess):
         socket.send(msg)
         mark_job_scheduled(job.url)
     """
-    def __init__(self, db_url, send_bind):  #, unit_test=False):
+    def __init__(self, db_url, send_bind):
         KillableProcess.__init__(self)
         self._db_url = db_url
         self._bind = send_bind
         self.log = logging.getLogger(self.__class__.__name__)
-        # self._unit_test = unit_test
 
     def work(self, should_continue):
+        if not should_continue():
+            return
+
         import meta
         import scheduler
         meta.db_url = self._db_url
         context = zmq.Context()
+        poller = zmq.Poller()
+
         with push_socket(context, self._bind) as publish:
-            # if self._unit_test:
-            #     time.sleep(5) # wait for client to connect... FIX
+            poller.register(publish, zmq.POLLOUT)
             while should_continue():
                 self.log.debug("running...")
-                for r in scheduler.get_crawl_jobs():
-                    url, msg = str(r.url), json.dumps(dict(url=r.url,
-                                          etag=r.etag,
-                                          last_modified=r.last_modified))
-                    publish.send_multipart([url, msg])
-                    scheduler.mark_job_scheduled(r.url)
-                else:
-                    self.log.info("nothing to do, waiting......")
-                    time.sleep(1)  # debug
+                polled = dict(poller.poll(timeout=100))
+                if publish in polled and polled[publish] == zmq.POLLOUT:
+                    for r in scheduler.get_crawl_jobs():
+                        url, msg = str(r.url), json.dumps(dict(url=r.url,
+                                              etag=r.etag,
+                                              last_modified=r.last_modified))
+                        publish.send_multipart([url, msg])
+                        self.log.info((url, msg))
+                        scheduler.mark_job_scheduled(r.url)
+                    else:
+                        self.log.info("nothing to do, waiting......")
             else:
                 self.log.debug("cleaning up....")
 
@@ -93,15 +98,21 @@ class CrawlWorker(KillableProcess):
             return
 
         context = zmq.Context()
-        with pull_socket(context, self._from_bind) as source:
-            with push_socket(context, self._to_bind) as destination:
-                while should_continue():
-                    url, data = None, None
+        with pull_socket(context, self._from_bind) as source, \
+                 push_socket(context, self._to_bind) as destination:
+            poller = zmq.Poller()
+            poller.register(source, zmq.POLLIN)
+            poller.register(destination, zmq.POLLOUT)
+
+            while should_continue():
+                url, data = None, None
+                presults = dict(poller.poll(timeout=10))
+                if len(presults) == 2:
                     try:
                         url, data = source.recv_multipart(zmq.NOBLOCK)
+                        self.log.info([url, data])
                     except zmq.ZMQError as ze:
-                        log.error("something bad happened maybe\n\n %s" % str(ze), exc_info=True)
-                        time.sleep(1)
+                        self.log.error("something bad happened maybe\n\n %s" % str(ze))
 
                     if url and data:
                         response = None
@@ -110,16 +121,19 @@ class CrawlWorker(KillableProcess):
                             response = crawl_url(url=url,
                                                  etag=data["etag"],
                                                  last_modified=data["last_modified"])
+                            if response:
+                                self.log.info("got response for %s" % url)
                         except Exception:
-                            log.error("could not crawl %s" % url, exc_info=True)
+                            self.log.error("could not crawl %s" % url)
 
                         if response:
                             try:
-                                destination.send_multipart([url, str(response)],
-                                                           flags=zmq.NOBLOCK)
+                                self.log.info("sending to destination....")
+                                destination.send_multipart([url, str(response)])
                             except zmq.ZMQError as ze:
-                                log.error("could not send result of crawl of %s \n\n %s" % (url, str(ze)),
-                                          exc_info=True)
+                                self.log.error("could not send result of crawl of %s \n\n %s" % (url, str(ze)))
+                    self.log.info("did something...")
+                    self.log.info([presults, source in presults, destination in presults])
 
 
 class IndexWorker(object):
