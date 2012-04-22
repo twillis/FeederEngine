@@ -19,6 +19,11 @@ __here__ = os.path.abspath(os.path.dirname(__name__))
 logging.basicConfig(level="INFO")
 log = logging.getLogger(__name__)
 
+TMP_DBPATH = os.path.join(__here__, "tmpdb")
+
+if not os.path.isdir(TMP_DBPATH):
+    os.mkdir(TMP_DBPATH)
+
 
 class TestKillableProcess(unittest.TestCase):
     def test_start(self):
@@ -33,7 +38,7 @@ class TestKillableProcess(unittest.TestCase):
 
 class TestSchedulerWorker(unittest.TestCase):
     def setUp(self):
-        db_url = "sqlite:///%s/%s.db" % (__here__, str(uuid.uuid4()))
+        db_url = "sqlite:///%s/%s.db" % (TMP_DBPATH, str(uuid.uuid4()))
         self.engine = create_engine(db_url,
                                     echo=False)
         meta.Session = meta.session_factory(self.engine)
@@ -43,11 +48,12 @@ class TestSchedulerWorker(unittest.TestCase):
     def tearDown(self):
         scheduler.Base.metadata.drop_all(self.engine)
 
-    def test_start(self):
+    def testSchedulerAndCrawler(self):
         urls = [u"http://feeds.feedburner.com/43folders",
                 u"http://advocacy.python.org/podcasts/littlebit.rss",
                 u"http://friendfeed.com/alawrence?format=atom",
                 u"http://feeds.feedburner.com/antiwar"]
+
         with transaction.manager:
             for url in urls:
                 meta.Session().add(CrawlJobModel(url=url))
@@ -56,13 +62,13 @@ class TestSchedulerWorker(unittest.TestCase):
         self.assert_(len(list(meta.Session().query(CrawlJobModel).all())))
         self.assert_(len(list(get_crawl_jobs())))
 
-        # subscription = "http://feeds.feedburner.com/antiwar"
         log.info("telling worker to use database %s" % self.db_url)
-        scheduler_bind = "tcp://127.0.0.1:10000"
-        crawl_bind = "tcp://127.0.0.1:10001"
+        scheduler_bind = "ipc:///tmp/scheduler_socket"
+        crawl_bind = "ipc:///tmp/crawler_socket"
         from feederengine import crawler
         with mock(crawler, "proxy", mock_rss_server):
             w = SchedulerWorker(self.db_url, scheduler_bind)
+
             c = CrawlWorker(scheduler_bind, crawl_bind)
 
             w.start()
