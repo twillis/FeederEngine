@@ -2,9 +2,10 @@
 trying to test these things
 """
 import unittest
-from feederengine.workers import SchedulerWorker, CrawlWorker, pull_socket
+from feederengine.workers import SchedulerWorker, CrawlWorker, IndexWorker, pull_socket, push_socket
 from feederengine.process.base import KillableProcess
 from feederengine.scheduler import CrawlJobModel, get_crawl_jobs
+from feederengine import indexer
 from feederengine import meta, scheduler
 from sqlalchemy import create_engine
 import time
@@ -14,6 +15,7 @@ import os
 import logging
 import zmq
 from utils import mock, mock_rss_server
+from webob import Response
 
 __here__ = os.path.abspath(os.path.dirname(__name__))
 logging.basicConfig(level="INFO")
@@ -43,14 +45,31 @@ class TestSchedulerWorker(unittest.TestCase):
         self.engine = create_engine(db_url,
                                     echo=False)
         meta.Session = meta.session_factory(self.engine)
-        scheduler.Base.metadata.create_all(self.engine)
+        meta.Base.metadata.create_all(self.engine)
         self.db_url = db_url
 
     def tearDown(self):
-        scheduler.Base.metadata.drop_all(self.engine)
+        meta.Base.metadata.drop_all(self.engine)
         if os.path.isfile(self.db_path):
             os.remove(self.db_path)
-        
+
+    def testIndexer(self):
+        bind = "ipc:///tmp/crawler_socket"
+        context = zmq.Context()
+        iw = IndexWorker(bind, self.db_url)
+        iw.start()
+        self.assert_(iw.is_alive())
+        URL = "http://fictional.com"
+        with push_socket(context, bind) as source:
+            source.send_multipart([URL,
+                                   str(Response("this and that"))])
+
+            time.sleep(1)
+            self.assert_(not indexer.needs_indexed(URL))
+            iw.terminate()
+            time.sleep(.1)
+            self.assert_(not iw.is_alive())
+
     def testSchedulerAndCrawler(self):
         urls = [u"http://feeds.feedburner.com/43folders",
                 u"http://advocacy.python.org/podcasts/littlebit.rss",

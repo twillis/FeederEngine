@@ -8,7 +8,8 @@ import zmq
 import json
 import time
 from crawler import crawl_url
-
+import indexer
+import datetime
 log = logging.getLogger(__name__)
 
 
@@ -76,6 +77,7 @@ class SchedulerWorker(KillableProcess):
                         scheduler.mark_job_scheduled(r.url)
                     else:
                         self.log.info("nothing to do, waiting......")
+
             else:
                 self.log.debug("cleaning up....")
 
@@ -136,12 +138,50 @@ class CrawlWorker(KillableProcess):
                     self.log.info([presults, source in presults, destination in presults])
 
 
-class IndexWorker(object):
+class IndexWorker(KillableProcess):
     """
     pulls job off queue
     indexes response body[tokenize, stem, other]
+    saves to db
     """
-    pass
+    def __init__(self, from_bind, db_url):
+        KillableProcess.__init__(self)
+        self._from = from_bind
+        self._db_url = db_url
+        self.log = logging.getLogger(self.__class__.__name__)
+
+    def work(self, should_continue):
+        self.log.debug("ready to work")
+        if not should_continue():
+            return
+
+        import meta
+        import transaction
+        meta.db_url = self._db_url
+        context = zmq.Context()
+        poller = zmq.Poller()
+
+        with pull_socket(context, self._from) as source:
+            self.log.debug("has socket")
+            poller = zmq.Poller()
+            poller.register(source, zmq.POLLIN)
+
+            while should_continue():
+                self.log.debug("polling socket")
+                presults = dict(poller.poll(timeout=10))
+                if source in presults:
+                    self.log.debug("got work to do")
+                    url, response = source.recv_multipart(zmq.NOBLOCK)
+                    if indexer.needs_indexed(url):
+                        self.log.debug("indexing url %s" % url)
+                        index_list = list(indexer.index_page_iter(url, response))
+                        # persist to database
+                        if self.log.isEnabledFor("DEBUG"):
+                            self.log.debug("indexing complete for url %s" % url)
+                            for entry in index_list:
+                                self.log.debug("url: %(url)s\n\nstem: %(stem)s (%(frequency)s)" % entry)
+                        with transaction.manager:
+                            indexer.add_entries(index_list)
 
 
 class UpdateWorker(object):

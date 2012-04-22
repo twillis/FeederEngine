@@ -12,7 +12,9 @@ requires = ["feedparser",
             "pyzmq-static",
             "sqlalchemy",
             "zope.sqlalchemy",
-            "transaction"]
+            "transaction",
+            "nltk",
+            "beautifulsoup"]
 
 version = '0.0'
 

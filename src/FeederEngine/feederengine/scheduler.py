@@ -2,20 +2,14 @@
 given a table of urls and other information, decides when to schedule
 a crawler to crawl for updates
 """
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, UnicodeText, String, DateTime, or_, and_
-from sqlalchemy.orm import scoped_session
 import meta
 import datetime
 
 DEFAULT_JOB_COUNT = 10
 
-Base = declarative_base()
 
-
-
-
-class CrawlJobModel(Base):
+class CrawlJobModel(meta.Base):
     """
     let's start with models just being the representation of a row and
     not too much behavior and see how that goes.

@@ -2,7 +2,7 @@
 scheduler tests
 """
 import unittest
-from feederengine import scheduler, meta
+from feederengine import scheduler, indexer, meta
 from sqlalchemy import create_engine
 import transaction
 import datetime
@@ -15,15 +15,15 @@ meta.db_url = 'sqlite:///:memory:'
 
 def setUp(self):
     """db setup"""
-    self.engine = create_engine(meta.db_url, echo=False)
+    self.engine = create_engine(meta.db_url, echo=True)
     meta.Session = meta.session_factory(self.engine)
     # scheduler.DBSession.configure(bind=self.engine)
-    scheduler.Base.metadata.create_all(self.engine)
+    meta.Base.metadata.create_all(self.engine)
 
 
 def tearDown(self):
     """db teardown"""
-    scheduler.Base.metadata.drop_all(self.engine)
+    meta.Base.metadata.drop_all(self.engine)
 
 
 class TestCrawlJobModel(unittest.TestCase):
