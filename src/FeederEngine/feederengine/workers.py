@@ -2,13 +2,13 @@
 implementations of the various worker processes
 """
 import logging
-from process.base import KillableProcess
+from .process.base import KillableProcess
 import contextlib
 import zmq
 import json
 import time
-from crawler import crawl_url
-import indexer
+from .crawler import crawl_url
+from . import indexer
 import datetime
 log = logging.getLogger(__name__)
 
@@ -56,8 +56,8 @@ class SchedulerWorker(KillableProcess):
         if not should_continue():
             return
 
-        import meta
-        import scheduler
+        from . import meta
+        from . import scheduler
         meta.db_url = self._db_url
         context = zmq.Context()
         poller = zmq.Poller()
@@ -155,7 +155,7 @@ class IndexWorker(KillableProcess):
         if not should_continue():
             return
 
-        import meta
+        from . import meta
         import transaction
         meta.db_url = self._db_url
         context = zmq.Context()

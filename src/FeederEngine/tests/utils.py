@@ -2,7 +2,7 @@
 utils for testing
 """
 from mimetypes import guess_type
-import md5
+from hashlib import md5
 from webob import Request, Response
 import os
 import contextlib

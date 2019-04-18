@@ -1,7 +1,7 @@
 """
 use beautifulsoup to extract urls
 """
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+from bs4 import BeautifulSoup, SoupStrainer
 
 
 def extract_links_iter(body):

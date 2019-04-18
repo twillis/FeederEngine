@@ -8,8 +8,8 @@ db row that looks like
 """
 import nltk
 from nltk.stem import snowball
-import urlparse
-import meta
+from urllib import parse as urlparse
+from . import meta
 from sqlalchemy import PrimaryKeyConstraint, Table, Column, Unicode, UnicodeText, String, DateTime, Integer, or_, and_
 import datetime
 

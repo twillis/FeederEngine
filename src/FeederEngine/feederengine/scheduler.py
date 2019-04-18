@@ -3,7 +3,7 @@ given a table of urls and other information, decides when to schedule
 a crawler to crawl for updates
 """
 from sqlalchemy import Column, UnicodeText, String, DateTime, or_, and_
-import meta
+from . import meta
 import datetime
 
 DEFAULT_JOB_COUNT = 10

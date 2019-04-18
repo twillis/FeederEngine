@@ -9,12 +9,12 @@ CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 requires = ["feedparser",
             "webob",
             "paste",
-            "pyzmq-static",
+            "pyzmq",
             "sqlalchemy",
             "zope.sqlalchemy",
             "transaction",
             "nltk",
-            "beautifulsoup"]
+            "beautifulsoup4"]
 
 version = '0.0'
 
